@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackTube</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #0f0f0f;
+            color: #f1f1f1;
+        }
+
+        .header {
+            background-color: #212121;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 56px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 2000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .menu-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .menu-icon:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            color: #ff0000;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 500;
+            letter-spacing: -0.5px;
+            color: #fff;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255,255,255,0.05);
+            padding: 6px 12px;
+            border-radius: 18px;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .progress-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .progress-badge.completed {
+            background-color: #065fd4;
+            color: #fff;
+        }
+
+        .content {
+            margin-top: 56px;
+            padding: 24px;
+            max-width: 1754px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .chips-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .chip {
+            background-color: rgba(255,255,255,0.1);
+            color: #f1f1f1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.2s;
+        }
+
+        .chip:hover {
+            background-color: rgba(255,255,255,0.15);
+        }
+
+        .chip.active {
+            background-color: #f1f1f1;
+            color: #0f0f0f;
+        }
+
+        .intro-banner {
+            background-color: #212121;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .intro-banner h1 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .intro-banner p {
+            font-size: 14px;
+            color: #aaa;
+            line-height: 1.5;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 16px;
+        }
+
+        .video-card {
+            cursor: pointer;
+            background-color: transparent;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: #272727;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .video-card:hover .video-thumbnail {
+            border-radius: 0;
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background-color: rgba(0,0,0,0.8);
+            color: #fff;
+            padding: 3px 4px;
+            border-radius: 2px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .video-details {
+            display: flex;
+            gap: 12px;
+            padding-top: 12px;
+        }
+
+        .channel-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .video-info {
+            flex: 1;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #f1f1f1;
+            line-height: 1.4;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-metadata {
+            font-size: 12px;
+            color: #aaa;
+            font-weight: 400;
+        }
+
+        .channel-name {
+            color: #aaa;
+            margin-bottom: 2px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: #212121;
+            border-radius: 12px;
+            max-width: 700px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            margin: 20px;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .profile-section {
+            padding: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+        }
+
+        .profile-info h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .profile-info p {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .videos-section h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .video-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background-color: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .video-item i {
+            color: #aaa;
+            font-size: 16px;
+        }
+
+        .video-item span {
+            font-size: 14px;
+            color: #f1f1f1;
+        }
+
+        .login-section {
+            padding: 24px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background-color: #181818;
+        }
+
+        .login-section h3 {
+            font-size: 18px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .login-section > p {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 2px;
+            color: #f1f1f1;
+            font-size: 14px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #3ea6ff;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #3ea6ff;
+            color: #fff;
+            border: none;
+            border-radius: 2px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Roboto', Arial, sans-serif;
+        }
+
+        .btn:hover {
+            background-color: #4db2ff;
+        }
+
+        .hint-btn {
+            background-color: rgba(255,255,255,0.1);
+            margin-top: 12px;
+        }
+
+        .hint-btn:hover {
+            background-color: rgba(255,255,255,0.15);
+        }
+
+        .hint-box {
+            display: none;
+            background-color: rgba(255,152,0,0.1);
+            border: 1px solid rgba(255,152,0,0.3);
+            padding: 16px;
+            border-radius: 4px;
+            margin-top: 16px;
+            font-size: 14px;
+            color: #f1f1f1;
+        }
+
+        .hint-box.active {
+            display: block;
+        }
+
+        .error-message {
+            color: #ff4444;
+            background-color: rgba(255,68,68,0.1);
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.active {
+            display: block;
+        }
+
+        .success-modal {
+            padding: 32px 24px;
+            text-align: center;
+        }
+
+        .success-modal i {
+            font-size: 64px;
+            color: #3ea6ff;
+            margin-bottom: 16px;
+        }
+
+        .success-modal h2 {
+            font-size: 24px;
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 12px;
+        }
+
+        .success-modal > p {
+            font-size: 14px;
+            color: #aaa;
+            margin-bottom: 24px;
+        }
+
+        .lesson-box {
+            background-color: rgba(62,166,255,0.1);
+            border: 1px solid rgba(62,166,255,0.3);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .lesson-box h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #3ea6ff;
+            margin-bottom: 12px;
+        }
+
+        .lesson-box p {
+            font-size: 14px;
+            color: #f1f1f1;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .lesson-divider {
+            height: 1px;
+            background: rgba(62,166,255,0.3);
+            margin: 16px 0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f0f0f;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #3f3f3f;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f4f4f;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">
+                <i class="fab fa-youtube logo-icon"></i>
+                <span class="logo-text">HackTube</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="progress-container">
+                <span class="progress-text">Solved:</span>
+                <div class="progress-badge" id="badge1"><i class="fas fa-lock"></i></div>
+                <div class="progress-badge" id="badge2"><i class="fas fa-lock"></i></div>
+                <div class="progress-badge" id="badge3"><i class="fas fa-lock"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="chips-bar">
+            <button class="chip active">All</button>
+            <button class="chip">Pet Videos</button>
+            <button class="chip">Sports</button>
+            <button class="chip">Art & Creativity</button>
+            <button class="chip">Learn Cybersecurity</button>
+        </div>
+
+        <div class="intro-banner">
+            <h1>🕵️ Welcome to HackTube, Detective! 🕵️</h1>
+            <p>Can you crack the passwords? Look carefully at each user's profile, videos, and pictures to find clues. Use what you learn to guess their password and unlock important lessons about staying safe online!</p>
+        </div>
+
+        <div class="video-grid" id="videoGrid"></div>
+    </div>
+
+    <div class="modal" id="profileModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Channel Profile</div>
+                <button class="close-btn" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="profile-section" id="profileContent"></div>
+            <div class="login-section">
+                <h3>🔐 Crack the Password!</h3>
+                <p>Use the clues from this user's profile to guess their password.</p>
+                <div class="input-group">
+                    <label for="passwordInput">Enter Password:</label>
+                    <input type="text" id="passwordInput" placeholder="Type your guess here...">
+                </div>
+                <button class="btn" onclick="checkPassword()">Try Password</button>
+                <button class="btn hint-btn" onclick="showHint()">💡 Need a Hint?</button>
+                <div class="hint-box" id="hintBox"></div>
+                <div class="error-message" id="errorMessage">Oops! That's not quite right. Try again!</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="success-modal">
+                <i class="fas fa-check-circle"></i>
+                <h2>Amazing Detective Work! 🎉</h2>
+                <p>You cracked the password!</p>
+                <div class="lesson-box" id="lessonContent"></div>
+                <button class="btn" onclick="closeSuccessModal()">Continue Investigating</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const users = [
+            {
+                id: 1,
+                username: 'DogLover123',
+                avatar: '🐕',
+                profilePic: '🐕',
+                about: 'I love my dog Benny! We do everything together!',
+                videos: [
+                    'Benny learns a new trick!',
+                    'Walking Benny in the park',
+                    'Benny and I play fetch',
+                    'Teaching Benny to sit',
+                    'Benny\'s favorite toy',
+                    'Benny and I go to the beach',
+                    'Benny meets my friends',
+                    'Benny\'s birthday party!'
+                ],
+                password: 'benny',
+                hint: 'Look at the profile picture and all the video titles. What name appears over and over?',
+                lesson: {
+                    password: 'Never use your pet\'s name as a password! If someone can see your pictures or videos, they can guess your password.',
+                    general: 'Any private information or personal information should NOT be added to public content, like video titles or usernames. Bad actors can use this information to guess passwords or even pretend to know you!'
+                }
+            },
+            {
+                id: 2,
+                username: 'SoccerStar_Emma',
+                avatar: '⚽',
+                profilePic: '⚽',
+                about: 'Soccer is my life! I wear jersey number 7 and I love playing forward!',
+                videos: [
+                    'My best goal ever!',
+                    'Practice drills for soccer',
+                    'Why I love number 7',
+                    'My lucky number 7 jersey',
+                    'Soccer game highlights',
+                    'Training with my team',
+                    'Number 7 is the best!',
+                    'Soccer tips for beginners'
+                ],
+                password: 'seven',
+                hint: 'This user talks about a special number a lot. What number do they mention in their videos and profile?',
+                lesson: {
+                    password: 'Don\'t use your lucky numbers, jersey numbers, or favorite numbers as passwords! These are easy for people to find out.',
+                    general: 'Be careful what details you share publicly! Things like your jersey number, favorite things, or special dates can help strangers learn too much about you. Keep personal details private!'
+                }
+            },
+            {
+                id: 3,
+                username: 'ArtKid2018',
+                avatar: '🎨',
+                profilePic: '🎨',
+                about: 'I love to paint and draw! My cat Whiskers is my art buddy!',
+                videos: [
+                    'Drawing Whiskers sleeping',
+                    'Painting with Whiskers watching',
+                    'Whiskers knocks over my paint!',
+                    'Portrait of my cat Whiskers',
+                    'Art supplies haul',
+                    'Whiskers the art critic',
+                    'My favorite drawings of Whiskers',
+                    'Whiskers helps me paint'
+                ],
+                password: 'whiskers',
+                hint: 'This artist has a furry friend who appears in lots of videos. What\'s the cat\'s name?',
+                lesson: {
+                    password: 'Just like with dogs, don\'t use your pet\'s name as a password! Pet names are very easy to guess from photos and videos.',
+                    general: 'Think before you post! When you share videos or posts online, make sure you\'re not accidentally telling everyone your pet\'s name, where you go to school, or other private information. Keep yourself safe by keeping some things private!'
+                }
+            }
+        ];
+
+        let currentUser = null;
+        let completedUsers = new Set();
+
+        function init() {
+            const grid = document.getElementById('videoGrid');
+            users.forEach(user => {
+                const card = document.createElement('div');
+                card.className = 'video-card';
+                card.onclick = () => openProfile(user.id);
+                
+                card.innerHTML = `
+                    <div class="video-thumbnail">
+                        ${user.avatar}
+                        <div class="video-duration">${user.videos.length} videos</div>
+                    </div>
+                    <div class="video-details">
+                        <div class="channel-icon">${user.profilePic}</div>
+                        <div class="video-info">
+                            <div class="video-title">${user.username}'s Channel</div>
+                            <div class="video-metadata">
+                                <div class="channel-name">${user.username}</div>
+                                <div>Click to investigate!</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        function openProfile(userId) {
+            currentUser = users.find(u => u.id === userId);
+            
+            const profileContent = document.getElementById('profileContent');
+            let videosList = '';
+            currentUser.videos.forEach(video => {
+                videosList += `
+                    <div class="video-item">
+                        <i class="fas fa-play-circle"></i>
+                        <span>${video}</span>
+                    </div>
+                `;
+            });
+            
+            profileContent.innerHTML = `
+                <div class="profile-header">
+                    <div class="profile-avatar">${currentUser.profilePic}</div>
+                    <div class="profile-info">
+                        <h2>${currentUser.username}</h2>
+                        <p>${currentUser.about}</p>
+                    </div>
+                </div>
+                <div class="videos-section">
+                    <h3>Videos</h3>
+                    ${videosList}
+                </div>
+            `;
+            
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('hintBox').classList.remove('active');
+            document.getElementById('errorMessage').classList.remove('active');
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('profileModal').classList.remove('active');
+            currentUser = null;
+        }
+
+        function showHint() {
+            const hintBox = document.getElementById('hintBox');
+            hintBox.innerHTML = `<strong>💡 Hint:</strong> ${currentUser.hint}`;
+            hintBox.classList.add('active');
+        }
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value.toLowerCase().trim();
+            const errorMsg = document.getElementById('errorMessage');
+            
+            if (input === currentUser.password) {
+                completedUsers.add(currentUser.id);
+                updateProgress();
+                showSuccess();
+            } else {
+                errorMsg.classList.add('active');
+                setTimeout(() => {
+                    errorMsg.classList.remove('active');
+                }, 3000);
+            }
+        }
+
+        function showSuccess() {
+            const lessonContent = document.getElementById('lessonContent');
+            lessonContent.innerHTML = `
+                <h3>What You Learned:</h3>
+                <p><strong>About Passwords:</strong> ${currentUser.lesson.password}</p>
+                <div class="lesson-divider"></div>
+                <p><strong>About Staying Safe Online:</strong> ${currentUser.lesson.general}</p>
+            `;
+            
+            document.getElementById('profileModal').classList.remove('active');
+            document.getElementById('successModal').classList.add('active');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+        }
+
+        function updateProgress() {
+            completedUsers.forEach(userId => {
+                const badge = document.getElementById(`badge${userId}`);
+                badge.classList.add('completed');
+                badge.innerHTML = '<i class="fas fa-check"></i>';
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
